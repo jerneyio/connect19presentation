@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5950b9fc-a4ee-46eb-a854-d46400a93809" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<flow name="connect19presentationFlow" doc:id="fc83bef8-39ca-4e02-8f64-f8e31528d819" >
+		<http:listener doc:name="Listener" doc:id="da688154-de68-4665-939e-6b8ce12399e5" config-ref="HTTP_Listener_config" path="/trig"/>
+		<ee:transform doc:name="Set Payload" doc:id="61969462-cd93-4591-932b-e28054f160f7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[
+ {
+   "Account": "ms3",
+   "Type": "Credit",
+   "Amount": 100,
+   "Date": "5/30/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Credit",
+   "Amount": 325,
+   "Date": "6/15/2019"
+ },
+ {
+   "Account": "MuleSoft",
+   "Type": "Debit",
+   "Amount": 725,
+   "Date": "4/29/2019"
+ },
+ {
+   "Account": "MuleSoft",
+   "Type": "Credit",
+   "Amount": 1000,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "jerney.io",
+   "Type": "Debit",
+   "Amount": 250,
+   "Date": "5/30/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Debit",
+   "Amount": 125,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "MuleSoft",
+   "Type": "Credit",
+   "Amount": 875,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Credit",
+   "Amount": 950,
+   "Date": "6/15/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Credit",
+   "Amount": 450,
+   "Date": "3/18/2019"
+ },
+ {
+   "Account": "jerney.io",
+   "Type": "Credit",
+   "Amount": 400,
+   "Date": "5/30/2019"
+ },
+ {
+   "Account": "MuleSoft",
+   "Type": "Debit",
+   "Amount": 1250,
+   "Date": "4/15/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Debit",
+   "Amount": 250,
+   "Date": "3/18/2019"
+ },
+ {
+   "Account": "jerney.io",
+   "Type": "Credit",
+   "Amount": 225,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "jerney.io",
+   "Type": "Debit",
+   "Amount": 775,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Credit",
+   "Amount": 500,
+   "Date": "5/30/2019"
+ },
+ {
+   "Account": "MuleSoft",
+   "Type": "Credit",
+   "Amount": 150,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "MuleSoft",
+   "Type": "Credit",
+   "Amount": 475,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Debit",
+   "Amount": 800,
+   "Date": "6/29/2019"
+ },
+ {
+   "Account": "jerney.io",
+   "Type": "Debit",
+   "Amount": 50,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Debit",
+   "Amount": 1500,
+   "Date": "4/1/2019"
+ },
+ {
+   "Account": "jerney.io",
+   "Type": "Credit",
+   "Amount": 750,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "jerney.io",
+   "Type": "Credit",
+   "Amount": 250,
+   "Date": "4/1/2019"
+ },
+ {
+   "Account": "MuleSoft",
+   "Type": "Debit",
+   "Amount": 100,
+   "Date": "5/16/2019"
+ },
+ {
+   "Account": "ms3",
+   "Type": "Debit",
+   "Amount": 350,
+   "Date": "4/29/2019"
+ },
+ {
+   "Account": "MuleSoft",
+   "Type": "Credit",
+   "Amount": 250,
+   "Date": "5/16/2019"
+ }
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Calc Account Totals" doc:id="b78d3ddf-daca-4c38-b203-a523dece6c47" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+(payload groupBy $.Account) mapObject (account, accountName) -> {
+	(accountName): account reduce (accountItem, total=0) ->
+		accountItem.Type match {
+			case "Credit" -> if ((accountItem.Date as Date {format: "M/d/yyyy"}) < now())
+							   total - accountItem.Amount * 1.1
+							 else
+							   total - accountItem.Amount
+		    case "Debit" -> if ((accountItem.Date as Date {format: "M/d/yyyy"}) < now())
+							   total + accountItem.Amount * 1.1
+							 else
+							   total + accountItem.Amount
+		}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b63f5f58-12c0-431d-b5d5-4e4dceec4547" message='#[payload]'/>
+	</flow>
+</mule>

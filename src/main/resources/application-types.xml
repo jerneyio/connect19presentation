@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="json" format="json">
+      <types:shape format="weave" example="example.json"><![CDATA[%dw 2.0
+
+type json = Array<{|  Account: String,   Type: String,   Amount: String,   Date: String|}> {"example": "[{\"Account\":\"ms3\",\"Type\":\"Credit\",\"Amount\":\"100\",\"Date\":\"5\/30\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Credit\",\"Amount\":\"325\",\"Date\":\"6\/15\/2019\"},{\"Account\":\"Mulesoft\",\"Type\":\"Debit\",\"Amount\":\"725\",\"Date\":\"4\/29\/2019\"},{\"Account\":\"Mulesoft\",\"Type\":\"Credit\",\"Amount\":\"1000\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"vendor2\",\"Type\":\"Debit\",\"Amount\":\"250\",\"Date\":\"5\/30\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Debit\",\"Amount\":\"125\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"Mulesoft\",\"Type\":\"Credit\",\"Amount\":\"875\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Credit\",\"Amount\":\"950\",\"Date\":\"6\/15\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Credit\",\"Amount\":\"450\",\"Date\":\"3\/18\/2019\"},{\"Account\":\"vendor2\",\"Type\":\"Credit\",\"Amount\":\"400\",\"Date\":\"5\/30\/2019\"},{\"Account\":\"Mulesoft\",\"Type\":\"Debit\",\"Amount\":\"1250\",\"Date\":\"4\/15\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Debit\",\"Amount\":\"250\",\"Date\":\"3\/18\/2019\"},{\"Account\":\"vendor2\",\"Type\":\"Credit\",\"Amount\":\"225\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"vendor2\",\"Type\":\"Debit\",\"Amount\":\"775\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Credit\",\"Amount\":\"500\",\"Date\":\"5\/30\/2019\"},{\"Account\":\"Mulesoft\",\"Type\":\"Credit\",\"Amount\":\"150\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"Mulesoft\",\"Type\":\"Credit\",\"Amount\":\"475\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Debit\",\"Amount\":\"800\",\"Date\":\"6\/29\/2019\"},{\"Account\":\"vendor2\",\"Type\":\"Debit\",\"Amount\":\"50\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Debit\",\"Amount\":\"1500\",\"Date\":\"4\/1\/2019\"},{\"Account\":\"vendor2\",\"Type\":\"Credit\",\"Amount\":\"750\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"vendor2\",\"Type\":\"Credit\",\"Amount\":\"250\",\"Date\":\"4\/1\/2019\"},{\"Account\":\"Mulesoft\",\"Type\":\"Debit\",\"Amount\":\"100\",\"Date\":\"5\/16\/2019\"},{\"Account\":\"ms3\",\"Type\":\"Debit\",\"Amount\":\"350\",\"Date\":\"4\/29\/2019\"},{\"Account\":\"Mulesoft\",\"Type\":\"Credit\",\"Amount\":\"250\",\"Date\":\"5\/16\/2019\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#1dd43151-e2f9-4233-8e75-d6fd0a3f59dd">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="json"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
